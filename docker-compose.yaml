@@ -1,0 +1,40 @@
+version: "3.9"
+name: bank_app
+services:
+  bank_db:
+    image: postgres:17
+    container_name: bank_db
+    environment:
+      POSTGRES_USER: bank_app_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: bank_app
+    volumes:
+      - ./migration:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+  keycloack:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloack
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://bank_db:5432/bank_app
+      KC_DB_USERNAME: bank_app_user
+      KC_DB_PASSWORD: password
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB_SCHEMA: keycloack
+    volumes:
+      - ./keycloak/realm-master.json:/opt/keycloak/data/import/realm-master.json:ro
+    command:
+      - start-dev
+      - --import-realm
+    ports:
+      - "9090:8080"
+    depends_on:
+      - bank_db
+  external-configuration:
+    build:
+      context: ./consul
+    container_name: external-configuration
+    ports:
+      - "8500:8500"
