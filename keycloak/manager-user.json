@@ -1,0 +1,82 @@
+{
+  "clientId": "manager-user",
+  "name": "",
+  "description": "",
+  "rootUrl": "",
+  "adminUrl": "",
+  "baseUrl": "",
+  "surrogateAuthRequired": false,
+  "enabled": true,
+  "alwaysDisplayInConsole": false,
+  "clientAuthenticatorType": "client-secret",
+  "secret": "BRUKanqM9Ku33MhBj5C4JVictH2AGM4i",
+  "redirectUris": [
+    ""
+  ],
+  "webOrigins": [
+    ""
+  ],
+  "notBefore": 0,
+  "bearerOnly": false,
+  "consentRequired": false,
+  "standardFlowEnabled": true,
+  "implicitFlowEnabled": false,
+  "directAccessGrantsEnabled": true,
+  "serviceAccountsEnabled": true,
+  "publicClient": false,
+  "frontchannelLogout": true,
+  "protocol": "openid-connect",
+  "attributes": {
+    "logout.confirmation.enabled": "false",
+    "client.secret.creation.time": "1776670194",
+    "standard.token.exchange.enabled": "false",
+    "oauth2.jwt.authorization.grant.enabled": "false",
+    "frontchannel.logout.session.required": "true",
+    "oauth2.device.authorization.grant.enabled": "false",
+    "use.jwks.url": "false",
+    "backchannel.logout.revoke.offline.tokens": "false",
+    "realm_client": "false",
+    "oidc.ciba.grant.enabled": "false",
+    "backchannel.logout.session.required": "true",
+    "display.on.consent.screen": "false",
+    "dpop.bound.access.tokens": "false",
+    "post.logout.redirect.uris": "",
+    "login_theme": "",
+    "consent.screen.text": "",
+    "frontchannel.logout.url": ""
+  },
+  "authenticationFlowBindingOverrides": {},
+  "fullScopeAllowed": true,
+  "nodeReRegistrationTimeout": -1,
+  "defaultClientScopes": [
+    "web-origins",
+    "service_account",
+    "acr",
+    "roles",
+    "profile",
+    "basic",
+    "email"
+  ],
+  "optionalClientScopes": [
+    "address",
+    "phone",
+    "offline_access",
+    "organization",
+    "microprofile-jwt"
+  ],
+  "access": {
+    "view": true,
+    "configure": true,
+    "manage": true
+  },
+  "authorizationServicesEnabled": false,
+  "serviceAccountRoles": {
+    "realm-management": [
+      "manage-users",
+      "view-users",
+      "query-users",
+      "view-realm",
+      "manage-realm"
+    ]
+  }
+}

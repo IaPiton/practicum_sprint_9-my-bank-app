@@ -1,0 +1,62 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: account-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bank_app
+    username: bank_app_user
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        default_schema: bank_account
+
+  config:
+    import: "optional:consul:"
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      config:
+        enabled: true
+        format: yaml
+        prefixes:
+          - config
+        default-context: application
+        data-key: data
+        watch:
+          enabled: true
+          delay: 1000
+      discovery:
+        enabled: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/master
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    root: INFO
+    ru.practicum.bank.gateway: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.web.reactive.function.client: DEBUG
+    org.springframework.http: DEBUG
+
+#keycloak:
+#  server-url: http://localhost:9090
+#  realm: master
+#  client-id: manager-user
+#  secret: 6X8Zn4g2XSZb9kLlbrzk8XR5oBsvNWvs

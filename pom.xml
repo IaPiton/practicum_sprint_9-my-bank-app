@@ -36,9 +36,20 @@
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+    </dependencies>
+
+
 
 
     <modules>
         <module>front-app</module>
+        <module>account-service</module>
+        <module>gateway-service</module>
     </modules>
 </project>

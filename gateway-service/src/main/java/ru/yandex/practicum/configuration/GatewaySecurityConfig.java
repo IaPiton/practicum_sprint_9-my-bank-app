@@ -1,0 +1,34 @@
+package ru.yandex.practicum.configuration;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import ru.yandex.practicum.security.JwtTokenRelayGatewayFilterFactory;
+
+
+@Configuration
+@EnableWebFluxSecurity
+public class GatewaySecurityConfig {
+
+    @Bean
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/actuator/**").permitAll()
+                        .pathMatchers("/account/user/register").permitAll()
+                        .anyExchange().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+
+        return http.build();
+    }
+
+    @Bean
+    public JwtTokenRelayGatewayFilterFactory jwtTokenRelayGatewayFilterFactory() {
+        return new JwtTokenRelayGatewayFilterFactory();
+    }
+}

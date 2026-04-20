@@ -1,14 +1,29 @@
+server:
+  port: 8080
+
 spring:
-  config:
-    import: "optional:consul:"
   application:
     name: front-ui
-  cloud:
-    consul:
-      host: localhost
-      port: 8500
-      config:
-        enabled: false  # Временно отключите Consul для простоты
+#  config:
+#    import: "optional:consul:"
+#  cloud:
+#    consul:
+#      host: localhost
+#      port: 8500
+#      discovery:
+#        enabled: true
+#        service-name: front-ui
+#        prefer-ip-address: true
+#        health-check-path: /actuator/health
+#        health-check-interval: 10s
+#      config:
+#        enabled: true
+#        format: yaml
+#        watch:
+#          enabled: true
+#          delay: 1000
+#        prefix: config
+
   security:
     oauth2:
       client:
@@ -33,8 +48,9 @@ keycloak-custom:
   host: localhost
   port: 9090
 
-server:
-  port: 8080  # Явно укажите порт
+bank:
+  gateway:
+    base-url: http://localhost:8081
 
 management:
   endpoint:

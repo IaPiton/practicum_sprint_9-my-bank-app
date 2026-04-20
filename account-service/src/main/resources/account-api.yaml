@@ -1,0 +1,180 @@
+openapi: 3.0.3
+info:
+  title: Сервис аккаунтов
+  version: 1.0.0-SNAPSHOT
+
+paths:
+  /user/register:
+    post:
+      operationId: RegisterNewUser
+      summary: Регистрация нового пользователя в системе
+      description: Данные из UI формы передаются в систему и сохраняются в БД
+      tags:
+        - user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupUserInfoDto'
+      responses:
+        "201":
+          description: "Пользователь успешно зарегистрирован"
+        "400":
+          description: "Некорректный запрос или пользователь уже существует"
+        "409":
+          description: "Пользователь с таким username или email уже существует"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ResponseInfo:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          description: Код ответа
+          example: 200
+        message:
+          type: string
+          description: Сообщение
+          example: "Operation completed successfully"
+
+    UserInfo:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Имя пользователя
+          example: "john_doe"
+        firstName:
+          type: string
+          description: Имя
+          example: "John"
+        lastName:
+          type: string
+          description: Фамилия
+          example: "Doe"
+        birthDay:
+          type: string
+          format: date
+          description: Дата рождения
+          example: "1990-01-01"
+        email:
+          type: string
+          format: email
+          description: Email
+          example: "john@example.com"
+        balance:
+          type: number
+          description: Баланс счета
+          example: 1000.00
+        roles:
+          type: array
+          items:
+            type: string
+            example: "USER"
+
+    ErrorResponseInfo:
+      type: object
+      required:
+        - responseInfo
+      properties:
+        responseInfo:
+          $ref: '#/components/schemas/ResponseInfo'
+
+    UserInfoRs:
+      type: object
+      required:
+        - responseInfo
+      properties:
+        userInfo:
+          $ref: '#/components/schemas/UserInfo'
+        responseInfo:
+          $ref: '#/components/schemas/ResponseInfo'
+
+    SignupUserInfoDto:
+      type: object
+      required:
+        - login
+        - passwordInfo
+        - personalInfo
+      properties:
+        login:
+          type: string
+          description: Логин пользователя
+        passwordInfo:
+          $ref: '#/components/schemas/PasswordInfoDto'
+        personalInfo:
+          $ref: '#/components/schemas/PersonalUserInfoDto'
+
+    PasswordInfoDto:
+      type: object
+      required:
+        - password
+        - confirmPassword
+      properties:
+        password:
+          type: string
+          description: Пароль пользователя
+        confirmPassword:
+          type: string
+          description: Подтверждение пароля
+
+    PersonalUserInfoDto:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - birthDate
+        - email
+      properties:
+        firstName:
+          type: string
+          description: Имя
+        lastName:
+          type: string
+          description: Фамилия
+        birthDate:
+          type: string
+          format: date
+          description: Дата рождения
+        email:
+          type: string
+          format: email
+          description: Email пользователя
+        accounts:
+          type: array
+          description: Счета пользователя (опционально)
+          items:
+            $ref: '#/components/schemas/AccountInfoDto'
+
+    AccountInfoDto:
+      type: object
+      properties:
+        currency:
+          $ref: '#/components/schemas/AccountCurrency'
+        value:
+          type: number
+          description: Сумма на счете
+        exists:
+          type: boolean
+          description: Существует ли счет
+
+    AccountCurrency:
+      type: string
+      description: Валюта счета
+      enum:
+        - RUB
+        - USD
+        - EUR
+      example: "RUB"

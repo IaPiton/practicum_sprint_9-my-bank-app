@@ -9,13 +9,15 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import ru.yandex.practicum.dto.ErrorStorage;
 import ru.yandex.practicum.dto.SignupUserInfoDto;
+import ru.yandex.practicum.service.SignupUserService;
 
 @Controller
 @RequiredArgsConstructor
 public class SignupController {
 
-//    private final SignupUserService signupUserService;
+    private final SignupUserService signupUserService;
 
     @GetMapping("/signup")
     public String getSignupPage(Model model) {
@@ -35,12 +37,12 @@ public class SignupController {
             return "signup";
         }
 
-//        ErrorStorage errorStorage = signupUserService.signupNewUser(userInfo);
-//        if (errorStorage.hasError()) {
-//            model.addAttribute("userInfo", userInfo);
-//            model.addAttribute("errors", errorStorage.getErrors());
-//            return "signup.html";
-//        }
+        ErrorStorage errorStorage = signupUserService.signupNewUser(userInfo);
+        if (errorStorage.hasError()) {
+            model.addAttribute("userInfo", userInfo);
+            model.addAttribute("errors", errorStorage.getErrors());
+            return "signup.html";
+        }
         return "redirect:/main";
     }
 }

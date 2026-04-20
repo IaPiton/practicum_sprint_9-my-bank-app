@@ -14,7 +14,9 @@ import java.util.List;
 @Accessors(chain = true)
 public class PersonalUserInfoDto {
     @NotNull
-    private String name;
+    private String firstName;
+    @NotNull
+    private String lastName;
     @NotNull
     @BirthDay
     @DateTimeFormat(pattern="yyyy-MM-dd")
