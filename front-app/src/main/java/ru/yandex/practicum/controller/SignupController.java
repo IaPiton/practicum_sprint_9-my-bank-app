@@ -9,7 +9,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.yandex.practicum.model.SignupUserInfoDto;
+import ru.yandex.practicum.dto.SignupUserInfoDto;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,6 +41,6 @@ public class SignupController {
 //            model.addAttribute("errors", errorStorage.getErrors());
 //            return "signup.html";
 //        }
-        return "redirect:/";
+        return "redirect:/main";
     }
 }

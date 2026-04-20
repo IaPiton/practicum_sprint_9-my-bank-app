@@ -1,4 +1,4 @@
-package ru.yandex.practicum.model;
+package ru.yandex.practicum.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
