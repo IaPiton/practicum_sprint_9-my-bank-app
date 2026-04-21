@@ -5,9 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import ru.yandex.practicum.account.api.UserApi;
-import ru.yandex.practicum.account.model.SignupUserInfoDto;
+import ru.yandex.practicum.account.model.UserDto;
 import ru.yandex.practicum.service.AccountService;
 import ru.yandex.practicum.service.CreateUserService;
+import ru.yandex.practicum.service.UserService;
 
 
 @Controller
@@ -17,12 +18,18 @@ public class UserController
 {
     private final CreateUserService createUserService;
     private final AccountService accountService;
+    private final UserService userService;
 
     @Override
-    public ResponseEntity<Void> registerNewUser(SignupUserInfoDto signupUserInfoDto) {
+    public ResponseEntity<UserDto> getUserByKeycloakId(String keycloakId) {
+        return ResponseEntity.ok(userService.getUser(keycloakId));
+    }
+
+    @Override
+    public ResponseEntity<Void> registerNewUser(UserDto userDto) {
         try {
-            String keycloakId = createUserService.addUser(signupUserInfoDto);
-            accountService.creatUserAndAccount(keycloakId, signupUserInfoDto);
+            createUserService.addUser(userDto);
+            accountService.createUserAndAccount(userDto);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

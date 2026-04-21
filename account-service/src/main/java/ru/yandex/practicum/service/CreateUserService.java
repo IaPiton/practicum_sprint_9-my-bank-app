@@ -12,7 +12,7 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.account.model.SignupUserInfoDto;
+import ru.yandex.practicum.account.model.UserDto;
 import ru.yandex.practicum.configuration.propertise.KeycloakProperties;
 
 import java.util.Collections;
@@ -23,7 +23,7 @@ import java.util.Collections;
 public class CreateUserService {
     private final KeycloakProperties keycloakProperties;
 
-    public String addUser(SignupUserInfoDto signupUserInfoDto) {
+    public void addUser(UserDto userDto) {
         try (Keycloak keycloak = KeycloakBuilder.builder()
                 .serverUrl(keycloakProperties.getServerUrl())
                 .realm(keycloakProperties.getRealm())
@@ -35,44 +35,40 @@ public class CreateUserService {
             String realm = keycloakProperties.getRealm();
             RealmResource realmResource = keycloak.realm(realm);
 
-            UserRepresentation user = getUserRepresentation(signupUserInfoDto);
+            UserRepresentation user = getUserRepresentation(userDto);
             UsersResource usersResource = realmResource.users();
             Response response = usersResource.create(user);
 
             if (response.getStatus() != 201) {
                 String error = response.readEntity(String.class);
-                throw new RuntimeException("Failed to create user: " + error);
+                throw new RuntimeException("Ошибка создания пользователя: " + error);
             }
 
             String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
-            log.info("User created successfully with ID: {}", userId);
             response.close();
 
             createRoleIfNotExists(realmResource, "USER");
 
             assignRoleToUser(realmResource, userId, "USER");
 
-            log.info("Role USER assigned to user: {}", signupUserInfoDto.getLogin());
-
-            return userId;
+            userDto.setKeycloakId(userId);
         } catch (Exception e) {
-            log.error("Error creating user in Keycloak", e);
             throw new RuntimeException("Ошибка создания пользователя в Keycloak", e);
         }
     }
 
-    private UserRepresentation getUserRepresentation(SignupUserInfoDto signupUserInfoDto) {
+    private UserRepresentation getUserRepresentation(UserDto userDto) {
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
-        user.setUsername(signupUserInfoDto.getLogin());
-        user.setEmail(signupUserInfoDto.getPersonalInfo().getEmail());
-        user.setFirstName(signupUserInfoDto.getPersonalInfo().getFirstName());
-        user.setLastName(signupUserInfoDto.getPersonalInfo().getLastName());
+        user.setUsername(userDto.getLogin());
+        user.setEmail(userDto.getEmail());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
 
         CredentialRepresentation passwordCred = new CredentialRepresentation();
         passwordCred.setTemporary(false);
         passwordCred.setType(CredentialRepresentation.PASSWORD);
-        passwordCred.setValue(signupUserInfoDto.getPasswordInfo().getPassword());
+        passwordCred.setValue(userDto.getPassword());
         user.setCredentials(Collections.singletonList(passwordCred));
         return user;
     }
@@ -85,7 +81,6 @@ public class CreateUserService {
             newRole.setName(roleName);
             newRole.setDescription("Standard user role");
             realmResource.roles().create(newRole);
-            log.info("Role {} created successfully", roleName);
         }
     }
 
@@ -94,10 +89,8 @@ public class CreateUserService {
             RoleRepresentation role = realmResource.roles().get(roleName).toRepresentation();
 
             realmResource.users().get(userId).roles().realmLevel().add(Collections.singletonList(role));
-            log.info("Role {} assigned to user {}", roleName, userId);
         } catch (Exception e) {
-            log.error("Failed to assign role {} to user {}", roleName, userId, e);
-            throw new RuntimeException("Failed to assign role to user", e);
+            throw new RuntimeException("Ошибка при создании роли", e);
         }
     }
 }

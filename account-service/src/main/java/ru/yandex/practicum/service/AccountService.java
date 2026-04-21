@@ -1,7 +1,7 @@
 package ru.yandex.practicum.service;
 
-import ru.yandex.practicum.account.model.SignupUserInfoDto;
+import ru.yandex.practicum.account.model.UserDto;
 
 public interface AccountService {
-    void creatUserAndAccount(String keycloakId, SignupUserInfoDto signupUserInfoDto);
+    void createUserAndAccount(UserDto userDto);
 }

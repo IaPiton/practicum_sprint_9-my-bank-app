@@ -1,63 +1,25 @@
-server:
-  port: 8080
-
 spring:
   application:
     name: front-ui
-#  config:
-#    import: "optional:consul:"
-#  cloud:
-#    consul:
-#      host: localhost
-#      port: 8500
-#      discovery:
-#        enabled: true
-#        service-name: front-ui
-#        prefer-ip-address: true
-#        health-check-path: /actuator/health
-#        health-check-interval: 10s
-#      config:
-#        enabled: true
-#        format: yaml
-#        watch:
-#          enabled: true
-#          delay: 1000
-#        prefix: config
-
-  security:
-    oauth2:
-      client:
-        provider:
-          keycloak:
-            issuer-uri: http://${keycloak-custom.host}:${keycloak-custom.port}/realms/master
-            user-name-attribute: preferred_username  # Лучше чем "sub"
-        registration:
-          front-ui:
-            provider: keycloak
-            client-id: front-ui
-            client-secret: UtEeKuE25MilWrxKqbxzCDoO0Pto8uKe
-            authorization-grant-type: authorization_code
-            redirect-uri: "http://localhost:8080/login/oauth2/code/front-ui"  # Конкретный URI
-            scope:
-              - openid
-              - profile
-              - email
-            client-authentication-method: client_secret_basic  # Лучше чем post
-
-keycloak-custom:
-  host: localhost
-  port: 9090
-
-bank:
-  gateway:
-    base-url: http://localhost:8081
-
-management:
-  endpoint:
-    health:
-      probes:
+  config:
+    import: "optional:consul:"
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
         enabled: true
+        service-name: front-ui
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+      config:
+        enabled: true
+        format: YAML
+        prefix: config
+        default-context: application
+        fail-fast: true
+        watch:
+          enabled: true
+          delay: 1000
 
-logging:
-  level:
-    org.springframework.security: DEBUG

@@ -1,14 +1,15 @@
 package ru.yandex.practicum.persistent.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "bank_account", schema = "bank_account")
@@ -23,8 +24,7 @@ public class BankAccount {
     private BankUser bankUser;
 
     @Column(nullable = false)
-    @Builder.Default
-    private Long balance = 0L;
+    private BigDecimal balance;
 
     @Column(name = "account_number", unique = true, length = 50)
     private String accountNumber;

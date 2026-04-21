@@ -2,7 +2,7 @@ package ru.yandex.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.account.model.SignupUserInfoDto;
+import ru.yandex.practicum.account.model.UserDto;
 import ru.yandex.practicum.persistent.entity.BankAccount;
 import ru.yandex.practicum.persistent.entity.BankUser;
 import ru.yandex.practicum.persistent.repository.BankAccountRepository;
@@ -18,15 +18,14 @@ public class AccountServiceImpl implements AccountService {
     private final BankUserRepository bankUserRepository;
 
     @Override
-    public void creatUserAndAccount(String keycloakId, SignupUserInfoDto signupUserInfoDto) {
+    public void createUserAndAccount(UserDto userDto) {
         BankUser bankUser = BankUser.builder()
-                .username(signupUserInfoDto.getLogin())
-                .birthday(signupUserInfoDto.getPersonalInfo().getBirthDate())
-                .email(signupUserInfoDto.getPersonalInfo().getEmail())
-                .firstName(signupUserInfoDto.getPersonalInfo().getFirstName())
-                .lastName(signupUserInfoDto.getPersonalInfo().getLastName())
-                .keycloakId(keycloakId)
-                .fullName(signupUserInfoDto.getPersonalInfo().getFirstName() + " " + signupUserInfoDto.getPersonalInfo().getLastName())
+                .username(userDto.getLogin())
+                .birthday(userDto.getBirthday())
+                .email(userDto.getEmail())
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .keycloakId(userDto.getKeycloakId())
                 .build();
         bankUserRepository.save(bankUser);
 
@@ -34,7 +33,7 @@ public class AccountServiceImpl implements AccountService {
                 .bankUser(bankUser)
                 .accountNumber(generateAccountNumber())
                 .currency("RUB")
-                .balance(0L)
+                .balance(userDto.getBalance())
                 .isActive(true)
                 .build();
         bankAccountRepository.save(bankAccount);

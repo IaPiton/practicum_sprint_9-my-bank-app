@@ -1,10 +1,7 @@
 package ru.yandex.practicum.persistent.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -12,6 +9,8 @@ import java.util.UUID;
 
 @Entity
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "bank_user", schema = "bank_account")
@@ -35,9 +34,6 @@ public class BankUser {
 
     @Column(name = "last_name", nullable = false, length = 255)
     private String lastName;
-
-    @Column(name = "full_name", nullable = false, length = 255)
-    private String fullName;
 
     @Column(nullable = false, unique = true, length = 255)
     private String email;

@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import ru.yandex.practicum.dto.Account;
 import ru.yandex.practicum.dto.ErrorStorage;
 import ru.yandex.practicum.dto.SignupUserInfoDto;
+
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -20,14 +23,21 @@ public class SignupUserService {
                     gatewayWebClient
                             .post()
                             .uri(gatewayBaseUrl + "/account/user/register")
-                            .bodyValue(userInfo)
+                            .bodyValue(Account.builder()
+                                    .birthday(userInfo.getPersonalInfo().getBirthDate())
+                                    .firstName(userInfo.getPersonalInfo().getFirstName())
+                                    .lastName(userInfo.getPersonalInfo().getLastName())
+                                    .email(userInfo.getPersonalInfo().getEmail())
+                                    .login(userInfo.getLogin())
+                                    .password(userInfo.getPasswordInfo().getPassword())
+                                    .balance(new BigDecimal(0))
+                                    .build())
                             .retrieve()
                             .bodyToMono(ErrorStorage.class)
                             .block();
         } catch (Exception e) {
             errorStorage.addError("Не удалось зарегистрировать пользователя, попробуйте позже");
         }
-
         return errorStorage;
     }
 }

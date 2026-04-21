@@ -17,7 +17,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignupUserInfoDto'
+              $ref: '#/components/schemas/UserDto'
       responses:
         "201":
           description: "Пользователь успешно зарегистрирован"
@@ -25,6 +25,30 @@ paths:
           description: "Некорректный запрос или пользователь уже существует"
         "409":
           description: "Пользователь с таким username или email уже существует"
+  /user/{keycloakId}:
+    get:
+      operationId: getUserByKeycloakId
+      summary: Получение пользователя по ID
+      description: Получение пользователя по ID из БД
+      parameters:
+        - name: keycloakId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Keycloak ID пользователя
+      tags:
+        - user
+      security: [USER]
+      responses:
+        "200":
+          description: "Пользователь успешно зарегистрирован"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        "400":
+          description: "Неудалось получить пользователя"
 
 components:
   securitySchemes:
@@ -49,132 +73,33 @@ components:
           description: Сообщение
           example: "Operation completed successfully"
 
-    UserInfo:
+    UserDto:
       type: object
       properties:
-        username:
+        keycloakId:
           type: string
-          description: Имя пользователя
-          example: "john_doe"
-        firstName:
-          type: string
-          description: Имя
-          example: "John"
-        lastName:
-          type: string
-          description: Фамилия
-          example: "Doe"
-        birthDay:
-          type: string
-          format: date
-          description: Дата рождения
-          example: "1990-01-01"
-        email:
-          type: string
-          format: email
-          description: Email
-          example: "john@example.com"
-        balance:
-          type: number
-          description: Баланс счета
-          example: 1000.00
-        roles:
-          type: array
-          items:
-            type: string
-            example: "USER"
-
-    ErrorResponseInfo:
-      type: object
-      required:
-        - responseInfo
-      properties:
-        responseInfo:
-          $ref: '#/components/schemas/ResponseInfo'
-
-    UserInfoRs:
-      type: object
-      required:
-        - responseInfo
-      properties:
-        userInfo:
-          $ref: '#/components/schemas/UserInfo'
-        responseInfo:
-          $ref: '#/components/schemas/ResponseInfo'
-
-    SignupUserInfoDto:
-      type: object
-      required:
-        - login
-        - passwordInfo
-        - personalInfo
-      properties:
+          description: Идентификатор пользователя в Keycloak
         login:
           type: string
           description: Логин пользователя
-        passwordInfo:
-          $ref: '#/components/schemas/PasswordInfoDto'
-        personalInfo:
-          $ref: '#/components/schemas/PersonalUserInfoDto'
-
-    PasswordInfoDto:
-      type: object
-      required:
-        - password
-        - confirmPassword
-      properties:
         password:
           type: string
           description: Пароль пользователя
-        confirmPassword:
-          type: string
-          description: Подтверждение пароля
-
-    PersonalUserInfoDto:
-      type: object
-      required:
-        - firstName
-        - lastName
-        - birthDate
-        - email
-      properties:
         firstName:
           type: string
           description: Имя
         lastName:
           type: string
           description: Фамилия
-        birthDate:
+        birthday:
           type: string
           format: date
-          description: Дата рождения
+          description: Дата рождения (yyyy-MM-dd)
         email:
           type: string
           format: email
-          description: Email пользователя
-        accounts:
-          type: array
-          description: Счета пользователя (опционально)
-          items:
-            $ref: '#/components/schemas/AccountInfoDto'
-
-    AccountInfoDto:
-      type: object
-      properties:
-        currency:
-          $ref: '#/components/schemas/AccountCurrency'
-        value:
+          description: Email адрес
+        balance:
           type: number
-          description: Сумма на счете
-        exists:
-          type: boolean
-          description: Существует ли счет
-
-    AccountCurrency:
-      type: string
-      description: Валюта счета
-      enum:
-        - RUB
-        - USD
-        - EUR
-      example: "RUB"
+          format: decimal
+          description: Баланс счета

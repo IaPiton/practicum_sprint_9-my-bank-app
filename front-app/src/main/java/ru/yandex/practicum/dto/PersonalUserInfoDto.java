@@ -24,5 +24,4 @@ public class PersonalUserInfoDto {
     @Email
     @NotNull
     private String email;
-    private List<AccountInfoDto> accounts;
 }
