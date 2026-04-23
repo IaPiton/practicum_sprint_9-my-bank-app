@@ -9,6 +9,7 @@ import ru.yandex.practicum.account.model.UserDto;
 import ru.yandex.practicum.service.AccountService;
 import ru.yandex.practicum.service.CreateUserService;
 import ru.yandex.practicum.service.UserService;
+import ru.yandex.practicum.service.UserServiceImpl;
 
 
 @Controller
@@ -34,5 +35,14 @@ public class UserController
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<String> updateUser(UserDto userDto) {
+        try {
+            return ResponseEntity.ok(userService.updateUser(userDto));
+        } catch (Exception e) {
+            return new ResponseEntity<>("Неудалось обновить пользователя", HttpStatus.BAD_REQUEST);
+        }
     }
 }

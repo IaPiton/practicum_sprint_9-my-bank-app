@@ -27,6 +27,7 @@ public class GatewaySecurityConfig {
         return http.build();
     }
 
+
     @Bean
     public JwtTokenRelayGatewayFilterFactory jwtTokenRelayGatewayFilterFactory() {
         return new JwtTokenRelayGatewayFilterFactory();

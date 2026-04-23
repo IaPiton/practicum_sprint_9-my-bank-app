@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 
 @Documented
 @Constraint(validatedBy = BirthDayUserValidator.class)
-@Target({ ElementType.METHOD, ElementType.FIELD })
+@Target({ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BirthDay {
     String message() default "Доступ к сервису доступен лишь по достижению 18-ти лет";

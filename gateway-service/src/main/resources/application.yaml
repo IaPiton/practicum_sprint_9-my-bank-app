@@ -17,7 +17,7 @@ spring:
     gateway:
       routes:
         - id: account-service
-          uri: http://localhost:8082  # Или используйте lb://account-service для discovery
+          uri: http://localhost:8082
           predicates:
             - Path=/account/**
           filters:
@@ -26,12 +26,13 @@ spring:
               args:
                 permittedPaths:
                   - /user/register
-        - id: front-ui
-          uri: http://localhost:8080  # Перенаправление на front-app
+        - id: cash-service
+          uri: http://localhost:8083
           predicates:
-            - Path=/**
+            - Path=/cash/**
           filters:
-            - StripPrefix=0
+            - RewritePath=/cash/(?<segment>.*), /$\{segment}
+            - name: JwtTokenRelay
 
 keycloak-custom:
   host: localhost

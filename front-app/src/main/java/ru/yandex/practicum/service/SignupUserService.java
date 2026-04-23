@@ -33,7 +33,7 @@ public class SignupUserService {
                                     .balance(new BigDecimal(0))
                                     .build())
                             .retrieve()
-                            .bodyToMono(ErrorStorage.class)
+                            .bodyToMono(Account.class)
                             .block();
         } catch (Exception e) {
             errorStorage.addError("Не удалось зарегистрировать пользователя, попробуйте позже");
