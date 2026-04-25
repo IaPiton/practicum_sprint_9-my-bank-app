@@ -1,5 +1,7 @@
 package ru.yandex.practicum.security;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -12,20 +14,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-/**
- * Gateway-фильтр, реализующий Token Relay:
- * забирает JWT из SecurityContext (если есть) или из входящего заголовка Authorization
- * и подставляет его в исходящий запрос к микросервису.
- * <p>
- * Поддерживает список разрешённых путей, для которых токен не требуется.
- * <p>
- * В application.yml используется как:
- * <p>
- * filters:
- * - name: JwtTokenRelay
- *   args:
- *     permittedPaths: /actuator/health, /actuator/info, /public/**
- */
 public class JwtTokenRelayGatewayFilterFactory extends AbstractGatewayFilterFactory<JwtTokenRelayGatewayFilterFactory.Config> {
 
     private static final Logger log = LoggerFactory.getLogger(JwtTokenRelayGatewayFilterFactory.class);
@@ -39,13 +27,11 @@ public class JwtTokenRelayGatewayFilterFactory extends AbstractGatewayFilterFact
         return (exchange, chain) -> {
             String path = exchange.getRequest().getURI().getPath();
 
-            // Если путь разрешённый — пропускаем без токена
             if (isPermittedPath(path, config.getPermittedPaths())) {
                 log.debug("Permitted path '{}' - skipping token relay", path);
                 return chain.filter(exchange);
             }
 
-            // Для защищённых путей требуем токен
             return extractToken(exchange)
                     .switchIfEmpty(Mono.error(new IllegalStateException(
                             "JWT token not found for protected path: " + path)))
@@ -53,9 +39,6 @@ public class JwtTokenRelayGatewayFilterFactory extends AbstractGatewayFilterFact
         };
     }
 
-    /**
-     * Проверяет, относится ли путь к разрешённым (с поддержкой wildcard **).
-     */
     private boolean isPermittedPath(String requestPath, List<String> permittedPaths) {
         if (permittedPaths == null || permittedPaths.isEmpty()) {
             return false;
@@ -64,9 +47,6 @@ public class JwtTokenRelayGatewayFilterFactory extends AbstractGatewayFilterFact
         return permittedPaths.stream().anyMatch(pattern -> matchPath(pattern, requestPath));
     }
 
-    /**
-     * Простое сопоставление пути с поддержкой ** в конце (например /public/**).
-     */
     private boolean matchPath(String pattern, String path) {
         if (pattern.endsWith("/**")) {
             String prefix = pattern.substring(0, pattern.length() - 2);
@@ -75,11 +55,6 @@ public class JwtTokenRelayGatewayFilterFactory extends AbstractGatewayFilterFact
         return pattern.equals(path);
     }
 
-    /**
-     * Пытаемся достать токен:
-     * 1) сначала из SecurityContext (если Gateway выступает как Resource Server),
-     * 2) если там пусто — из входящего заголовка Authorization.
-     */
     private Mono<String> extractToken(ServerWebExchange exchange) {
         Mono<String> fromContext = ReactiveSecurityContextHolder.getContext()
                 .map(SecurityContext::getAuthentication)
@@ -94,9 +69,6 @@ public class JwtTokenRelayGatewayFilterFactory extends AbstractGatewayFilterFact
         return fromContext.switchIfEmpty(fromHeader);
     }
 
-    /**
-     * Добавляем в исходящий запрос заголовок Authorization: Bearer <token>.
-     */
     private ServerWebExchange addToken(ServerWebExchange exchange, String token) {
         var mutated = exchange.mutate()
                 .request(exchange.getRequest().mutate()
@@ -110,18 +82,9 @@ public class JwtTokenRelayGatewayFilterFactory extends AbstractGatewayFilterFact
         return mutated;
     }
 
-    /**
-     * Конфигурация фильтра.
-     */
+    @Setter
+    @Getter
     public static class Config {
         private List<String> permittedPaths;
-
-        public List<String> getPermittedPaths() {
-            return permittedPaths;
-        }
-
-        public void setPermittedPaths(List<String> permittedPaths) {
-            this.permittedPaths = permittedPaths;
-        }
     }
 }

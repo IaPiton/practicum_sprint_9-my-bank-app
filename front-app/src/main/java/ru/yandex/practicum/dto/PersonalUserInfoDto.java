@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import ru.yandex.practicum.validator.BirthDay;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Accessors(chain = true)

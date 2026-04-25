@@ -3,7 +3,6 @@ package ru.yandex.practicum.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.client.*;
 import org.springframework.web.client.RestTemplate;
 import yandex.practicum.account.client.ApiClient;
 import yandex.practicum.account.client.api.CashGetApi;

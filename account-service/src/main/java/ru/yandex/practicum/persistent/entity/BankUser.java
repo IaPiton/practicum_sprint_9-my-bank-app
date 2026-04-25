@@ -20,22 +20,22 @@ public class BankUser {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "keycloak_id", nullable = false, unique = true, length = 255)
+    @Column(name = "keycloak_id", nullable = false, unique = true)
     private String keycloakId;
 
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
     private LocalDate birthday;
 
-    @Column(name = "first_name", nullable = false, length = 255)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 255)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @OneToOne(mappedBy = "bankUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
