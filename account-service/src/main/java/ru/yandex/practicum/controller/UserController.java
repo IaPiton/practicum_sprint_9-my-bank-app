@@ -9,14 +9,11 @@ import ru.yandex.practicum.account.model.UserDto;
 import ru.yandex.practicum.service.AccountService;
 import ru.yandex.practicum.service.CreateUserService;
 import ru.yandex.practicum.service.UserService;
-import ru.yandex.practicum.service.UserServiceImpl;
 
 
 @Controller
 @RequiredArgsConstructor
-public class UserController
-        implements UserApi
-{
+public class UserController implements UserApi {
     private final CreateUserService createUserService;
     private final AccountService accountService;
     private final UserService userService;

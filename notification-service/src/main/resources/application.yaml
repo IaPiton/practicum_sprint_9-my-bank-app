@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: notification-service
+  config:
+    import: "optional:consul:"
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        enabled: true
+        service-name: notification-service
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+      config:
+        enabled: true
+        format: YAML
+        prefix: config
+        default-context: application
+        fail-fast: true
+        watch:
+          enabled: true
+          delay: 1000

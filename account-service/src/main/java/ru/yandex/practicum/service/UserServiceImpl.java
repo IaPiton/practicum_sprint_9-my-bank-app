@@ -12,6 +12,7 @@ import ru.yandex.practicum.persistent.repository.BankUserRepository;
 public class UserServiceImpl implements UserService{
     private final BankUserRepository bankUserRepository;
     private final BankUserMapper bankUserMapper;
+    private final NotificationService notificationService;
 
     public UserDto getUser(String keycloakId) {
         BankUser bankUser = bankUserRepository.findByKeycloakId(keycloakId).orElseThrow(RuntimeException::new);
@@ -25,6 +26,10 @@ public class UserServiceImpl implements UserService{
         bankUser.setFirstName(userDto.getFirstName());
         bankUser.setLastName(userDto.getLastName());
         bankUserRepository.save(bankUser);
+        notificationService.sendNotification(
+                bankUser.getEmail(),
+                "Обновление учетной записи",
+                String.format("Уважаемый %s %s, ваши данные учетной записи обновлены!", bankUser.getLastName(), bankUser.getFirstName()));
         return "Пользователь успешно обновлен.";
     }
 }

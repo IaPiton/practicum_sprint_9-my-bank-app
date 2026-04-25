@@ -11,36 +11,28 @@ import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.web.client.RestTemplate;
 import yandex.practicum.market.client.ApiClient;
-import yandex.practicum.market.client.api.CashGetApi;
 import yandex.practicum.market.client.api.CashPutApi;
+import yandex.practicum.market.client.api.NotificationApi;
 
 import java.io.IOException;
 import java.util.Objects;
 
 @Configuration
-public class AccountsClientConfig {
-
-
+public class NotificationsClientConfig {
 
     @Bean
-    public ApiClient apiAccountClient(
+    public ApiClient apiNotificationClient(
             RestTemplate restTemplate,
-            @Value("${bank.accounts-service.base-url}") String accountsServiceBaseUrl
+            @Value("${bank.notification-service.base-url}") String notificationServiceBaseUrl
     ) {
         ApiClient apiClient = new ApiClient(restTemplate);
-        apiClient.setBasePath(accountsServiceBaseUrl);
+        apiClient.setBasePath(notificationServiceBaseUrl);
         return apiClient;
     }
 
     @Bean
-    public CashPutApi cashPutApi(ApiClient apiAccountClient) {
-        return new CashPutApi(apiAccountClient);
+    public NotificationApi sendNotification(ApiClient apiNotificationClient) {
+        return new NotificationApi(apiNotificationClient);
     }
-
-    @Bean
-    public CashGetApi cashGetApi(ApiClient apiAccountClient) {
-        return new CashGetApi(apiAccountClient);
-    }
-
 
 }

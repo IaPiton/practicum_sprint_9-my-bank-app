@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.CashService;
+import ru.yandex.practicum.service.CashService;
 import ru.yandex.practicum.cash.api.CashApi;
 import ru.yandex.practicum.cash.model.CashDto;
-import ru.yandex.practicum.exception.CashException;
 
 @RestController
 @RequiredArgsConstructor

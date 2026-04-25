@@ -16,14 +16,13 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableMethodSecurity
-public class SecurityConfiguration {
+public class SecurityNotificationConfiguration {
 
     @Bean
     public SecurityFilterChain accountsSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/user/register").permitAll();
                     auth.requestMatchers("/actuator/**").permitAll();
                     auth.anyRequest().authenticated();
                 });
@@ -62,10 +61,6 @@ public class SecurityConfiguration {
         List<GrantedAuthority> authorities = roles.stream()
                 .map(role -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
-
-        if (roles.contains("ACCOUNTS_WRITE")) {
-            authorities.add(new SimpleGrantedAuthority("accounts.write"));
-        }
 
         return authorities;
     }
