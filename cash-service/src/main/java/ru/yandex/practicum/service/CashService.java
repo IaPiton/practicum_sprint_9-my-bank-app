@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import ru.yandex.practicum.cash.model.CashDto;
+
 import ru.yandex.practicum.exception.CashException;
-import yandex.practicum.market.client.api.CashGetApi;
-import yandex.practicum.market.client.api.CashPutApi;
-import yandex.practicum.market.client.model.CashAccountDto;
-import yandex.practicum.market.client.model.UserDto;
+import ru.yandex.practicum.model.CashDto;
+import yandex.practicum.account.client.api.CashGetApi;
+import yandex.practicum.account.client.api.CashPutApi;
+import yandex.practicum.account.client.model.CashAccountDto;
+import yandex.practicum.account.client.model.UserDto;
+
 
 import java.util.Objects;
 

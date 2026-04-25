@@ -3,8 +3,9 @@ package ru.yandex.practicum.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import yandex.practicum.market.client.api.NotificationApi;
-import yandex.practicum.market.client.model.Notification;
+import yandex.practicum.notification.client.api.NotificationApi;
+import yandex.practicum.notification.client.model.Notification;
+
 
 @Service
 @Slf4j

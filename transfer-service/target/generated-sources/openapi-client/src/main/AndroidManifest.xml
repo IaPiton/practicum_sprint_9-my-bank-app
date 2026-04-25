@@ -1,0 +1,3 @@
+<manifest package="yandex.practicum.notification.client" xmlns:android="http://schemas.android.com/apk/res/android">
+    <application />
+</manifest>

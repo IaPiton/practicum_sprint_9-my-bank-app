@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+
+
 import ru.yandex.practicum.account.api.UserApi;
-import ru.yandex.practicum.account.model.UserDto;
+import ru.yandex.practicum.model.UserDto;
 import ru.yandex.practicum.service.AccountService;
 import ru.yandex.practicum.service.CreateUserService;
 import ru.yandex.practicum.service.UserService;

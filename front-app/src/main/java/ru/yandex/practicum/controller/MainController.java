@@ -10,11 +10,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.yandex.practicum.dto.Account;
 import ru.yandex.practicum.dto.CashAction;
 import ru.yandex.practicum.service.AccountService;
 import ru.yandex.practicum.service.CashService;
-import ru.yandex.practicum.validator.BirthDay;
+import ru.yandex.practicum.service.TransferService;import ru.yandex.practicum.validator.BirthDay;
 
 import java.time.LocalDate;
 
@@ -24,6 +23,7 @@ import java.time.LocalDate;
 public class MainController {
     private final AccountService accountService;
     private final CashService cashService;
+    private final TransferService transferService;
 
     @GetMapping("/")
     public String getIndexPage() {
@@ -56,6 +56,18 @@ public class MainController {
             @AuthenticationPrincipal OidcUser user
     ) {
         cashService.editCash(model, value, action, user.getSubject());
+        accountService.getAccount(user.getSubject(), model);
+        return "main";
+    }
+
+    @PostMapping("/transfer")
+    public String transfer(
+            Model model,
+            @RequestParam("value") int value,
+            @RequestParam("login") String login,
+            @AuthenticationPrincipal OidcUser user
+    ) {
+        transferService.transferCash(model, user.getSubject(), value, login);
         accountService.getAccount(user.getSubject(), model);
         return "main";
     }

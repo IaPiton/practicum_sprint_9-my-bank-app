@@ -124,7 +124,32 @@ paths:
             application/json:
               schema:
                 type: string
-
+  /transfer/action:
+    post:
+      operationId: Transfer
+      summary: Перевод средств
+      tags:
+        - transferAccount
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferDto'
+      responses:
+        "200":
+          description: "Операция успешно завершена"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        "400":
+          description: "Ошибка при работес счетом"
+          content:
+            application/json:
+              schema:
+                type: string
 components:
   securitySchemes:
     bearerAuth:
@@ -133,6 +158,18 @@ components:
       bearerFormat: JWT
 
   schemas:
+    TransferDto:
+      type: object
+      properties:
+        keycloakId:
+          type: string
+          description: Идентификатор пользователя в Keycloak
+        login:
+          type: string
+          description: Логин поучателя перевода
+        value:
+          type: string
+          description: Сумма перевода
     UserDto:
       type: object
       properties:
@@ -163,6 +200,23 @@ components:
           type: number
           format: decimal
           description: Баланс счета
+        accounts:
+          type: array
+          description: Список переводов пользователя
+          items:
+            $ref: '#/components/schemas/AccountsTransfer'
+    AccountsTransfer:
+      type: object
+      required:
+        - login
+        - name
+      properties:
+        login:
+          type: string
+          description: Логин пользователя для перевода
+        name:
+          type: string
+          description: Имя пользователя
     CashAccountDto:
       type: object
       properties:

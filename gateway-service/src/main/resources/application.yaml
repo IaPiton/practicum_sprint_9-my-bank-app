@@ -33,6 +33,13 @@ spring:
           filters:
             - RewritePath=/cash/(?<segment>.*), /$\{segment}
             - name: JwtTokenRelay
+        - id: cash-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/transfer/**
+          filters:
+            - RewritePath=/transfer/(?<segment>.*), /$\{segment}
+            - name: JwtTokenRelay
 
 keycloak-custom:
   host: localhost

@@ -38,6 +38,7 @@ public class AccountService {
                 model.addAttribute("fullName", account.getLastName() + " " + account.getFirstName());
                 model.addAttribute("birthdate", account.getBirthday());
                 model.addAttribute("sum", account.getBalance());
+                model.addAttribute("accounts", account.getAccounts());
             }
 
         } catch (Exception e) {

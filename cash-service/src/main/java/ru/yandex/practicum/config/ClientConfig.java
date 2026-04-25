@@ -16,7 +16,7 @@ import java.util.Objects;
 @Configuration
 public class ClientConfig {
     @Bean
-    public OAuth2AuthorizedClientManager authorizedClientManager(
+    public OAuth2AuthorizedClientManager accountAuthorizedClientManager(
             ClientRegistrationRepository clientRegistrationRepository,
             OAuth2AuthorizedClientService authorizedClientService
     ) {

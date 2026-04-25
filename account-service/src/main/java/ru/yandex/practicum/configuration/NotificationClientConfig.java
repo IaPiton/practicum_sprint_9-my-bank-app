@@ -10,8 +10,9 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.web.client.RestTemplate;
-import yandex.practicum.market.client.ApiClient;
-import yandex.practicum.market.client.api.NotificationApi;
+import yandex.practicum.notification.client.ApiClient;
+import yandex.practicum.notification.client.api.NotificationApi;
+
 
 import java.io.IOException;
 import java.util.Objects;

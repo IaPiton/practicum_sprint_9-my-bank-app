@@ -5,11 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+
 import ru.yandex.practicum.account.api.CashGetApi;
 import ru.yandex.practicum.account.api.CashPutApi;
-import ru.yandex.practicum.account.model.CashAccountDto;
-import ru.yandex.practicum.account.model.UserDto;
 import ru.yandex.practicum.handler.CashException;
+
+import ru.yandex.practicum.model.CashAccountDto;
+import ru.yandex.practicum.model.UserDto;
 import ru.yandex.practicum.service.AccountService;
 
 @RestController

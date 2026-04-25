@@ -12,8 +12,8 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.account.model.UserDto;
 import ru.yandex.practicum.configuration.propertise.KeycloakProperties;
+import ru.yandex.practicum.model.UserDto;
 
 import java.util.Collections;
 
@@ -47,9 +47,9 @@ public class CreateUserService {
             String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
             response.close();
 
-            createRoleIfNotExists(realmResource, "USER");
+            createRoleIfNotExists(realmResource);
 
-            assignRoleToUser(realmResource, userId, "USER");
+            assignRoleToUser(realmResource, userId);
 
             userDto.setKeycloakId(userId);
         } catch (Exception e) {
@@ -73,20 +73,20 @@ public class CreateUserService {
         return user;
     }
 
-    private void createRoleIfNotExists(RealmResource realmResource, String roleName) {
+    private void createRoleIfNotExists(RealmResource realmResource) {
         try {
-            realmResource.roles().get(roleName).toRepresentation();
+            realmResource.roles().get("USER").toRepresentation();
         } catch (Exception e) {
             RoleRepresentation newRole = new RoleRepresentation();
-            newRole.setName(roleName);
+            newRole.setName("USER");
             newRole.setDescription("Standard user role");
             realmResource.roles().create(newRole);
         }
     }
 
-    private void assignRoleToUser(RealmResource realmResource, String userId, String roleName) {
+    private void assignRoleToUser(RealmResource realmResource, String userId) {
         try {
-            RoleRepresentation role = realmResource.roles().get(roleName).toRepresentation();
+            RoleRepresentation role = realmResource.roles().get("USER").toRepresentation();
 
             realmResource.users().get(userId).roles().realmLevel().add(Collections.singletonList(role));
         } catch (Exception e) {

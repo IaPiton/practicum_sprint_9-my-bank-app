@@ -2,10 +2,14 @@ package ru.yandex.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.account.model.UserDto;
+
+import ru.yandex.practicum.model.AccountsTransfer;
+import ru.yandex.practicum.model.UserDto;
 import ru.yandex.practicum.persistent.entity.BankUser;
 import ru.yandex.practicum.persistent.mapper.BankUserMapper;
 import ru.yandex.practicum.persistent.repository.BankUserRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +20,17 @@ public class UserServiceImpl implements UserService{
 
     public UserDto getUser(String keycloakId) {
         BankUser bankUser = bankUserRepository.findByKeycloakId(keycloakId).orElseThrow(RuntimeException::new);
-        return bankUserMapper.toDto(bankUser);
+        UserDto userDto = bankUserMapper.toDto(bankUser);
+
+        List<BankUser> bankUsers = bankUserRepository.findAll();
+        bankUsers.remove(bankUser);
+
+        List<AccountsTransfer> accountsTransfer = bankUsers.stream()
+                .map(user -> new AccountsTransfer(user.getUsername(), user.getLastName() + " " + user.getFirstName()))
+                .toList();
+        userDto.setAccounts(accountsTransfer);
+
+        return userDto;
     }
 
     @Override

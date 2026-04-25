@@ -2,16 +2,16 @@ package ru.yandex.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.account.model.CashAccountDto;
-import ru.yandex.practicum.account.model.UserDto;
+
 import ru.yandex.practicum.handler.CashException;
+import ru.yandex.practicum.model.CashAccountDto;
+import ru.yandex.practicum.model.UserDto;
 import ru.yandex.practicum.persistent.entity.BankAccount;
 import ru.yandex.practicum.persistent.entity.BankUser;
 import ru.yandex.practicum.persistent.mapper.BankUserMapper;
 import ru.yandex.practicum.persistent.repository.BankAccountRepository;
 import ru.yandex.practicum.persistent.repository.BankUserRepository;
 
-import javax.smartcardio.CardException;
 import java.math.BigDecimal;
 import java.util.UUID;
 

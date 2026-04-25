@@ -77,10 +77,10 @@
                             <inputSpec>${project.basedir}/../account-service/src/main/resources/account-api.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
-                            <packageName>yandex.practicum.market.client</packageName>
-                            <modelPackage>yandex.practicum.market.client.model</modelPackage>
-                            <apiPackage>yandex.practicum.market.client.api</apiPackage>
-                            <invokerPackage>yandex.practicum.market.client</invokerPackage>
+                            <packageName>yandex.practicum.account.client</packageName>
+                            <modelPackage>yandex.practicum.account.client.model</modelPackage>
+                            <apiPackage>yandex.practicum.account.client.api</apiPackage>
+                            <invokerPackage>yandex.practicum.account.client</invokerPackage>
                             <output>${project.build.directory}/generated-sources/openapi-client</output>
                             <generateSupportingFiles>true</generateSupportingFiles>
                             <generateApiTests>false</generateApiTests>
@@ -113,10 +113,10 @@
                             <inputSpec>${project.basedir}/../notification-service/src/main/resources/notification-api.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
-                            <packageName>yandex.practicum.market.client</packageName>
-                            <modelPackage>yandex.practicum.market.client.model</modelPackage>
-                            <apiPackage>yandex.practicum.market.client.api</apiPackage>
-                            <invokerPackage>yandex.practicum.market.client</invokerPackage>
+                            <packageName>yandex.practicum.notification.client</packageName>
+                            <modelPackage>yandex.practicum.notification.client.model</modelPackage>
+                            <apiPackage>yandex.practicum.notification.client.api</apiPackage>
+                            <invokerPackage>yandex.practicum.notification.client</invokerPackage>
                             <output>${project.build.directory}/generated-sources/openapi-client</output>
                             <generateSupportingFiles>true</generateSupportingFiles>
                             <generateApiTests>false</generateApiTests>
@@ -148,7 +148,7 @@
                             <inputSpec>${project.basedir}/src/main/resources/cash-api.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <apiPackage>ru.yandex.practicum.cash.api</apiPackage>
-                            <modelPackage>ru.yandex.practicum.cash.model</modelPackage>
+                            <modelPackage>ru.yandex.practicum.model</modelPackage>
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <configOptions>
                                 <useSpringBoot3>true</useSpringBoot3>

@@ -58,10 +58,8 @@ public class SecurityNotificationConfiguration {
                 .map(Object::toString)
                 .toList();
 
-        List<GrantedAuthority> authorities = roles.stream()
+        return roles.stream()
                 .map(role -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
-
-        return authorities;
     }
 }

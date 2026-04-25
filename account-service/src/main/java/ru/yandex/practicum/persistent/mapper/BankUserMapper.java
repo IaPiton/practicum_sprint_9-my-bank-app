@@ -2,7 +2,7 @@ package ru.yandex.practicum.persistent.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.yandex.practicum.account.model.UserDto;
+import ru.yandex.practicum.model.UserDto;
 import ru.yandex.practicum.persistent.entity.BankUser;
 
 

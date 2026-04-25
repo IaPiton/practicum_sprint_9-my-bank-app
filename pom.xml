@@ -80,5 +80,6 @@
         <module>gateway-service</module>
         <module>cash-service</module>
         <module>notification-service</module>
+        <module>transfer-service</module>
     </modules>
 </project>
