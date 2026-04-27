@@ -4,7 +4,7 @@
 
 - API version: 1.0.0-SNAPSHOT
 
-- Build date: 2026-04-27T06:16:33.055559500+03:00[Europe/Moscow]
+- Build date: 2026-04-27T09:54:48.649678300+03:00[Europe/Moscow]
 
 - Generator version: 7.12.0
 

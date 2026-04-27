@@ -32,17 +32,22 @@ public class AccountServiceImpl implements AccountService {
                 .lastName(userDto.getLastName())
                 .keycloakId(userDto.getKeycloakId())
                 .build();
-        bankUserRepository.save(bankUser);
+
+        BankUser savedUser = bankUserRepository.save(bankUser);
 
         BankAccount bankAccount = BankAccount.builder()
-                .bankUser(bankUser)
+                .bankUser(savedUser)
                 .accountNumber(generateAccountNumber())
                 .currency("RUB")
                 .balance(userDto.getBalance())
                 .isActive(true)
                 .build();
+
         bankAccountRepository.save(bankAccount);
 
+        savedUser.setBankAccount(bankAccount);
+
+        bankUserRepository.save(savedUser);
     }
 
     @Override
@@ -78,6 +83,5 @@ public class AccountServiceImpl implements AccountService {
         long milliseconds = System.currentTimeMillis();
         return "ACC" + milliseconds + UUID.randomUUID().toString().substring(0, 8);
     }
-
 
 }
