@@ -35,12 +35,9 @@ services:
     entrypoint: /bin/bash
     command: >
       -c "
-       /opt/keycloak/bin/kc.sh start-dev --import-realm  &
-       sleep 120
-       echo 'Keycloak ready, running init script'
-       /opt/keycloak/init.sh
-       wait
-      "
+          /opt/keycloak/bin/kc.sh start-dev --import-realm 
+          wait
+        "
     ports:
       - "8080:8080"
     networks:
