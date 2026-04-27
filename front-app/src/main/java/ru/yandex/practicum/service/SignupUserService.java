@@ -1,6 +1,7 @@
 package ru.yandex.practicum.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -11,6 +12,7 @@ import ru.yandex.practicum.dto.SignupUserInfoDto;
 import java.math.BigDecimal;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class SignupUserService {
     private final WebClient gatewayWebClient;
@@ -36,6 +38,7 @@ public class SignupUserService {
                             .bodyToMono(Account.class)
                             .block();
         } catch (Exception e) {
+            log.error(e.getMessage());
             errorStorage.addError("Не удалось зарегистрировать пользователя, попробуйте позже");
         }
         return errorStorage;

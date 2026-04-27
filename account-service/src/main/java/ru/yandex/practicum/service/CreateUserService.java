@@ -53,6 +53,7 @@ public class CreateUserService {
 
             userDto.setKeycloakId(userId);
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new RuntimeException("Ошибка создания пользователя в Keycloak", e);
         }
     }

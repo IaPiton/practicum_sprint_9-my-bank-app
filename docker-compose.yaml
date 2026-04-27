@@ -10,11 +10,14 @@ services:
       POSTGRES_DB: bank_app
     volumes:
       - ./migration:/docker-entrypoint-initdb.d
+    networks:
+      - bank-network
     ports:
       - "5432:5432"
-  keycloack:
+
+  keycloak-bank:
     image: quay.io/keycloak/keycloak:latest
-    container_name: keycloack
+    container_name: keycloak-bank
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://bank_db:5432/bank_app
@@ -22,19 +25,128 @@ services:
       KC_DB_PASSWORD: password
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-      KC_DB_SCHEMA: keycloack
+      KC_DB_SCHEMA: keycloak
+      KC_HOSTNAME: keycloak-bank
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT: false
     volumes:
       - ./keycloak/realm-master.json:/opt/keycloak/data/import/realm-master.json:ro
-    command:
-      - start-dev
-      - --import-realm
+      - ./keycloak/init.sh:/opt/keycloak/init.sh:ro
+    entrypoint: /bin/bash
+    command: >
+      -c "
+       /opt/keycloak/bin/kc.sh start-dev --import-realm  &
+       sleep 120
+       echo 'Keycloak ready, running init script'
+       /opt/keycloak/init.sh
+       wait
+      "
     ports:
-      - "9090:8080"
+      - "8080:8080"
+    networks:
+      - bank-network
     depends_on:
       - bank_db
-  external-configuration:
+
+  consul:
     build:
       context: ./consul
-    container_name: external-configuration
+    container_name: consul
+    networks:
+      - bank-network
     ports:
       - "8500:8500"
+
+  front-service:
+    container_name: front-service
+    build:
+      context: ./front-app/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8081:8081"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+  gateway-service:
+    container_name: gateway-service
+    build:
+      context: ./gateway-service/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8082:8082"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+  account-service:
+    container_name: account-service
+    build:
+      context: ./account-service/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8083:8083"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+  cash-service:
+    container_name: cash-service
+    build:
+      context: ./cash-service/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8084:8084"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./notification-service/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8085:8085"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+  transfer-service:
+    container_name: transfer-service
+    build:
+      context: ./transfer-service/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8086:8086"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+networks:
+  bank-network:
+    driver: bridge

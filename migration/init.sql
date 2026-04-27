@@ -1,5 +1,5 @@
 CREATE SCHEMA IF NOT EXISTS bank_account;
-CREATE SCHEMA IF NOT EXISTS keycloack;
+CREATE SCHEMA IF NOT EXISTS keycloak;
 
 CREATE TABLE IF NOT EXISTS bank_account.bank_user (
     id UUID PRIMARY KEY,

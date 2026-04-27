@@ -5,8 +5,8 @@ spring:
     import: "optional:consul:"
   cloud:
     consul:
-      host: localhost
-      port: 8500
+      host: ${CONSUL.HOST}
+      port: ${CONSUL.PORT}
       discovery:
         enabled: true
         service-name: front-ui

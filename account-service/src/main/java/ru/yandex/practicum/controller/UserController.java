@@ -1,6 +1,7 @@
 package ru.yandex.practicum.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import ru.yandex.practicum.service.UserService;
 
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 public class UserController implements UserApi {
     private final CreateUserService createUserService;
@@ -31,6 +33,7 @@ public class UserController implements UserApi {
             createUserService.addUser(userDto);
             accountService.createUserAndAccount(userDto);
         } catch (Exception e) {
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);

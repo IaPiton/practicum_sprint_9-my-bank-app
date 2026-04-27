@@ -38,7 +38,7 @@ public class BankUser {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToOne(mappedBy = "bankUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(mappedBy = "bankUser", cascade = CascadeType.ALL)
     private BankAccount bankAccount;
 
 }
