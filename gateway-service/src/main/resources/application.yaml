@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: gateway-service
+  config:
+    import: "optional:consul:"
+  cloud:
+    consul:
+      host: ${CONSUL.HOST}
+      port: ${CONSUL.PORT}
+      discovery:
+        enabled: true
+        service-name: gateway-service
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+      config:
+        enabled: true
+        format: YAML
+        prefixes:
+          - config
+        default-context: application
+        fail-fast: true
+        watch:
+          enabled: true
+          delay: 1000

@@ -1,0 +1,228 @@
+openapi: 3.0.3
+info:
+  title: Сервис аккаунтов
+  version: 1.0.0-SNAPSHOT
+
+paths:
+  /user/register:
+    post:
+      operationId: RegisterNewUser
+      summary: Регистрация нового пользователя в системе
+      description: Данные из UI формы передаются в систему и сохраняются в БД
+      tags:
+        - user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        "201":
+          description: "Пользователь успешно зарегистрирован"
+        "400":
+          description: "Некорректный запрос или пользователь уже существует"
+        "409":
+          description: "Пользователь с таким username или email уже существует"
+  /user/{keycloakId}:
+    get:
+      operationId: getUserByKeycloakId
+      summary: Получение пользователя по ID
+      description: Получение пользователя по ID из БД
+      parameters:
+        - name: keycloakId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Keycloak ID пользователя
+      tags:
+        - user
+      security: [USER]
+      responses:
+        "200":
+          description: "Пользователь успешно зарегистрирован"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        "400":
+          description: "Неудалось получить пользователя"
+  /user:
+    post:
+      operationId: updateUser
+      summary: Обновление пользователя
+      tags:
+        - user
+      security: [ USER ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        "200":
+          description: "Пользователь успешно обновлен"
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: "Неудалось обновить пользователя"
+  /cash/action/put:
+    post:
+      operationId: CashPut
+      summary: Пополнение счета
+      tags:
+        - cashPut
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CashAccountDto'
+      responses:
+        "200":
+          description: "Операция успешно завершена"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        "400":
+          description: "Ошибка при работес счетом"
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /cash/action/get:
+    post:
+      operationId: CashGet
+      summary: Снятие наличных
+      tags:
+        - cashGet
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CashAccountDto'
+      responses:
+        "200":
+          description: "Операция успешно завершена"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        "400":
+          description: "Ошибка при работес счетом"
+          content:
+            application/json:
+              schema:
+                type: string
+  /transfer/action:
+    post:
+      operationId: Transfer
+      summary: Перевод средств
+      tags:
+        - transferAccount
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferDto'
+      responses:
+        "200":
+          description: "Операция успешно завершена"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        "400":
+          description: "Ошибка при работес счетом"
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    TransferDto:
+      type: object
+      properties:
+        keycloakId:
+          type: string
+          description: Идентификатор пользователя в Keycloak
+        login:
+          type: string
+          description: Логин поучателя перевода
+        value:
+          type: string
+          description: Сумма перевода
+    UserDto:
+      type: object
+      properties:
+        keycloakId:
+          type: string
+          description: Идентификатор пользователя в Keycloak
+        login:
+          type: string
+          description: Логин пользователя
+        password:
+          type: string
+          description: Пароль пользователя
+        firstName:
+          type: string
+          description: Имя
+        lastName:
+          type: string
+          description: Фамилия
+        birthday:
+          type: string
+          format: date
+          description: Дата рождения (yyyy-MM-dd)
+        email:
+          type: string
+          format: email
+          description: Email адрес
+        balance:
+          type: number
+          format: decimal
+          description: Баланс счета
+        accounts:
+          type: array
+          description: Список переводов пользователя
+          items:
+            $ref: '#/components/schemas/AccountsTransfer'
+    AccountsTransfer:
+      type: object
+      required:
+        - login
+        - name
+      properties:
+        login:
+          type: string
+          description: Логин пользователя для перевода
+        name:
+          type: string
+          description: Имя пользователя
+    CashAccountDto:
+      type: object
+      properties:
+        keycloakId:
+          type: string
+          description: Идентификатор пользователя в Keycloak
+        value:
+          type: string
+          description: сумма денег

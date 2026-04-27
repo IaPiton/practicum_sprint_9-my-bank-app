@@ -1,0 +1,149 @@
+version: "3.9"
+name: bank_app
+services:
+  bank_db:
+    image: postgres:17
+    container_name: bank_db
+    environment:
+      POSTGRES_USER: bank_app_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: bank_app
+    volumes:
+      - ./migration:/docker-entrypoint-initdb.d
+    networks:
+      - bank-network
+    ports:
+      - "5432:5432"
+
+  keycloak-bank:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak-bank
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://bank_db:5432/bank_app
+      KC_DB_USERNAME: bank_app_user
+      KC_DB_PASSWORD: password
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB_SCHEMA: keycloak
+      KC_HOSTNAME: keycloak-bank
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT: false
+    volumes:
+      - ./keycloak/realm-master.json:/opt/keycloak/data/import/realm-master.json:ro
+      - ./keycloak/init.sh:/opt/keycloak/init.sh:ro
+    entrypoint: /bin/bash
+    command: >
+      -c "
+          /opt/keycloak/bin/kc.sh start-dev --import-realm 
+          wait
+        "
+    ports:
+      - "8080:8080"
+    networks:
+      - bank-network
+    depends_on:
+      - bank_db
+
+  consul:
+    build:
+      context: ./consul
+    container_name: consul
+    networks:
+      - bank-network
+    ports:
+      - "8500:8500"
+
+  front-service:
+    container_name: front-service
+    build:
+      context: ./front-app/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8081:8081"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+  gateway-service:
+    container_name: gateway-service
+    build:
+      context: ./gateway-service/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8082:8082"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+  account-service:
+    container_name: account-service
+    build:
+      context: ./account-service/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8083:8083"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+  cash-service:
+    container_name: cash-service
+    build:
+      context: ./cash-service/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8084:8084"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./notification-service/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8085:8085"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+  transfer-service:
+    container_name: transfer-service
+    build:
+      context: ./transfer-service/
+      dockerfile: Dockerfile
+    env_file:
+      - prod.env
+    ports:
+      - "8086:8086"
+    depends_on:
+      - keycloak-bank
+    networks:
+      - bank-network
+    restart: on-failure
+
+networks:
+  bank-network:
+    driver: bridge

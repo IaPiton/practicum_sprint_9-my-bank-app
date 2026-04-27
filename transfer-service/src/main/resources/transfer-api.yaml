@@ -1,0 +1,48 @@
+openapi: 3.0.3
+info:
+  title: Сервис переводов
+  version: 1.0.0-SNAPSHOT
+
+paths:
+  /send:
+    post:
+      operationId: Transfer
+      summary: Перевод
+      tags:
+        - transfer
+      description: Данные из UI формы передаются в систему и передаются в account-service и сохраняются в БД
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferDto'
+      responses:
+        "200":
+          description: "Операция успешно завершена"
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: "Ошибка при работес счетом"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    TransferDto:
+      type: object
+      properties:
+        keycloakId:
+          type: string
+          description: Идентификатор пользователя в Keycloak
+        login:
+          type: string
+          description: Логин поучателя перевода
+        value:
+          type: string
+          description: Сумма перевода

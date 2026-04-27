@@ -1,0 +1,53 @@
+openapi: 3.0.3
+info:
+  title: Сервис уведомлений
+  version: 1.0.0-SNAPSHOT
+servers:
+- url: /
+paths:
+  /notification:
+    post:
+      description: Уведомление об операциях пользователя
+      operationId: Notification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+        required: true
+      responses:
+        "200":
+          description: Уведомление отправлено
+        "400":
+          description: Ошибка при отправке уведомления
+      security: []
+      summary: Уведомление пользователей
+      tags:
+      - notification
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+components:
+  schemas:
+    Notification:
+      example:
+        heading: heading
+        text: text
+        email: email
+      properties:
+        email:
+          description: Почта пользователя
+          type: string
+        text:
+          description: Текст письма
+          type: string
+        heading:
+          description: Заголовок письма
+          type: string
+      type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http
+

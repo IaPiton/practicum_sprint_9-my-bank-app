@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: transfer-service
+  config:
+    import: "optional:consul:"
+  cloud:
+    consul:
+      host: ${CONSUL.HOST}
+      port: ${CONSUL.PORT}
+      discovery:
+        enabled: true
+        service-name: transfer-service
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+      config:
+        enabled: true
+        format: YAML
+        prefix: config
+        default-context: application
+        fail-fast: true
+        watch:
+          enabled: true
+          delay: 1000
+

@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    consul:
+      enabled: false
+    config:
+      enabled: false
+      import: optional:file:./
+
+bank:
+  notification-service:
+    base-url: http://localhost
